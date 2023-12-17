@@ -1,6 +1,5 @@
 package teamcity
 
-import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.assertThrows
 import java.io.File
 import java.io.FileNotFoundException
@@ -79,7 +78,7 @@ class FSCreatorTest {
     }
 
     @Test
-    fun createNewEmptyFolder() {
+    fun createEmptyFolder() {
         val fsFolder = FSFolder("folderName", ArrayList());
         fsCreator.create(fsFolder, path);
         val folder = File(Paths.get(path, fsFolder.name).toString());
@@ -105,4 +104,33 @@ class FSCreatorTest {
         }
         assertTrue(folder.deleteRecursively());
     }
+
+    @Test
+    fun createNestedFoldersWithContent() {
+        val files = ArrayList<FSEntry>();
+        for (i in 0..4) {
+            files.add(FSFile("file$i", "This is file $i"))
+        }
+        val fsFolder = FSFolder("folder", files);
+        val entries = ArrayList<FSEntry>(files);
+        entries.add(fsFolder)
+        val fsFolderRoot = FSFolder("folderRoot", entries);
+        fsCreator.create(fsFolderRoot, path);
+
+        val folderRoot = File(Paths.get(path, fsFolderRoot.name).toString());
+        val folder = File(Paths.get(path, fsFolderRoot.name, fsFolder.name).toString());
+
+        assertTrue(folderRoot.exists());
+        assertTrue(folder.exists());
+        for (i in 0..4) {
+            val path0 = Paths.get(path, fsFolderRoot.name).toString();
+            val path1 = Paths.get(path, fsFolderRoot.name, fsFolder.name).toString();
+            assertTrue(File(Paths.get(path0, entries[i].name).toString()).exists());
+            assertTrue(File(Paths.get(path1, entries[i].name).toString()).exists());
+        }
+
+        assertTrue(folderRoot.deleteRecursively());
+    }
+
+
 }
