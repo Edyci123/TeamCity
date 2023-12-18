@@ -1,3 +1,3 @@
 package teamcity.exceptions
 
-class UnsupportedFSEntryException(message: String): Exception(message);
+class UnsupportedFSEntryException(message: String): Exception(message)

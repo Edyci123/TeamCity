@@ -1,6 +1,16 @@
 package teamcity
 
+import teamcity.exceptions.EmptyNameException
+
 class FSFile(name: String, val content: String) : FSEntry(name) {
+
+    constructor(name: String) : this(name, "")
+
+    init {
+        if (name == "") {
+            throw EmptyNameException("No name given to the file.")
+        }
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
