@@ -1,5 +1,6 @@
 package teamcity
 
+import teamcity.exceptions.CircularReferenceException
 import teamcity.exceptions.UnsupportedFSEntryException
 import java.io.File
 import java.nio.file.FileAlreadyExistsException
@@ -35,6 +36,9 @@ class FSCreator {
         }
 
         for (entry in entryToCreate.content) {
+            if (entryToCreate == entry) {
+                throw CircularReferenceException("This will generate a circular reference.")
+            }
             create(entry, targetPath.absolutePath)
         }
     }

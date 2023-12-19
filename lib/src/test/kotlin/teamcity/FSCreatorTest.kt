@@ -1,6 +1,7 @@
 package teamcity
 
 import org.junit.jupiter.api.assertThrows
+import teamcity.exceptions.CircularReferenceException
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.FileAlreadyExistsException
@@ -132,5 +133,20 @@ class FSCreatorTest {
         assertTrue(folderRoot.deleteRecursively())
     }
 
+    @Test
+    fun createCircularReferenceStructure() {
+        val files = ArrayList<FSEntry>()
+        for (i in 0..4) {
+            files.add(FSFile("file$i", "This is file $i"))
+        }
+        val fsFolder = FSFolder("folder", files)
+        files.add(fsFolder)
+        val fsFolderRoot = FSFolder("folderRoot", files)
+        assertThrows<CircularReferenceException> {
+            fsCreator.create(fsFolderRoot, path)
+        }
+        val folderRoot = File(Paths.get(path, fsFolderRoot.name).toString())
+        assertTrue(folderRoot.deleteRecursively());
+    }
 
 }
