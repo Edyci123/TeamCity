@@ -1,14 +1,20 @@
 package teamcity
 
 import teamcity.exceptions.CircularReferenceException
+import teamcity.exceptions.NoPermissionsException
 import teamcity.exceptions.UnsupportedFSEntryException
 import java.io.File
 import java.nio.file.FileAlreadyExistsException
+import java.nio.file.Files
 
 class FSCreator {
 
     fun create(entryToCreate: FSEntry, destination: String) {
         val targetPath = File(destination, entryToCreate.name)
+
+        if (!Files.isWritable(targetPath.toPath().toAbsolutePath())) {
+            throw NoPermissionsException("You don't have enough permissions to create a file here!")
+        }
 
         when (entryToCreate) {
             is FSFile -> {

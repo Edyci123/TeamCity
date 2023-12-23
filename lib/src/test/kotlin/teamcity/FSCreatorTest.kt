@@ -2,10 +2,14 @@ package teamcity
 
 import org.junit.jupiter.api.assertThrows
 import teamcity.exceptions.CircularReferenceException
+import teamcity.exceptions.NoPermissionsException
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.FileAlreadyExistsException
+import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -147,6 +151,22 @@ class FSCreatorTest {
         }
         val folderRoot = File(Paths.get(path, fsFolderRoot.name).toString())
         assertTrue(folderRoot.deleteRecursively());
+    }
+
+    @Test
+    fun createEntryWithoutPermission() {
+        val os = System.getProperty("os.name").lowercase(Locale.getDefault())
+        if (!os.contains("win")) {
+            val fsFile = FSFile("File", "This is my file.")
+            val root = "/"
+            assertThrows<NoPermissionsException> {
+                fsCreator.create(fsFile, root)
+            }
+            val fsFolder = FSFolder("Folder")
+            assertThrows<NoPermissionsException> {
+                fsCreator.create(fsFolder, root)
+            }
+        }
     }
 
 }
