@@ -12,7 +12,7 @@ class FSCreator {
     fun create(entryToCreate: FSEntry, destination: String) {
         val targetPath = File(destination, entryToCreate.name)
 
-        if (!Files.isWritable(targetPath.toPath().toAbsolutePath())) {
+        if (!Files.isWritable(targetPath.parentFile.toPath().toAbsolutePath())) {
             throw NoPermissionsException("You don't have enough permissions to create a file here!")
         }
 

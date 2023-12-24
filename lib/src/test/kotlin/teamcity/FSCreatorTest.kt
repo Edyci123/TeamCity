@@ -84,7 +84,7 @@ class FSCreatorTest {
 
     @Test
     fun createEmptyFolder() {
-        val fsFolder = FSFolder("folderName", ArrayList())
+        val fsFolder = FSFolder("folderName")
         fsCreator.create(fsFolder, path)
         val folder = File(Paths.get(path, fsFolder.name).toString())
         assertTrue(folder.exists())
