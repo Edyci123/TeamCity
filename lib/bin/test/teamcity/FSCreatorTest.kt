@@ -41,7 +41,7 @@ class FSCreatorTest {
         for (i in 1..1000) {
             name += "f"
         }
-        val fsFile = FSFile(name, "")
+        val fsFile = FSFile(name)
         assertThrows<FileNotFoundException> {
             fsCreator.create(fsFile, path)
         }
@@ -49,7 +49,7 @@ class FSCreatorTest {
 
     @Test
     fun createNewFileNoContent() {
-        val fsFile = FSFile("File", "")
+        val fsFile = FSFile("File")
         fsCreator.create(fsFile, path)
         val file = File(Paths.get(path, fsFile.name).toString())
         assertTrue(file.exists())
@@ -64,7 +64,7 @@ class FSCreatorTest {
         val fsFile1 = FSFile("File1", "This is the file")
         assertThrows<FileAlreadyExistsException> {
             fsCreator.create(fsFile1, path)
-        }
+        }w
         assertTrue(File(Paths.get(path, fsFile.name).toString()).delete())
     }
 
