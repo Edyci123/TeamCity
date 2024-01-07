@@ -24,14 +24,13 @@ class FSCreator {
 
         val targetPath = File(destination, entryToCreate.name)
 
-        if (!Files.isWritable(targetPath.parentFile.toPath().toAbsolutePath())) {
-            throw NoPermissionsException("You don't have enough permissions to create a file here!")
-        }
-
         when (entryToCreate) {
             is FSFile -> {
                  if (!targetPath.exists()) {
                      targetPath.parentFile.mkdirs()
+                     if (!Files.isWritable(targetPath.parentFile.toPath().toAbsolutePath())) {
+                         throw NoPermissionsException("You don't have enough permissions to create a file here!")
+                     }
                      targetPath.writeText(entryToCreate.content)
                  } else {
                      throw FileAlreadyExistsException("File already exists ${targetPath.absolutePath}")
@@ -52,6 +51,10 @@ class FSCreator {
     private fun createDirectoryTree(targetPath: File, entryToCreate: FSFolder) {
         if (!targetPath.exists()) {
             targetPath.mkdirs()
+        }
+
+        if (!Files.isWritable(targetPath.parentFile.toPath().toAbsolutePath())) {
+            throw NoPermissionsException("You don't have enough permissions to create a file here!")
         }
 
         for (entry in entryToCreate.content) {
