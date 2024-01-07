@@ -6,10 +6,22 @@ import teamcity.exceptions.UnsupportedFSEntryException
 import java.io.File
 import java.nio.file.FileAlreadyExistsException
 import java.nio.file.Files
+import java.util.*
 
 class FSCreator {
 
+    private val uuidMap: MutableMap<UUID, Boolean> = mutableMapOf()
+
     fun create(entryToCreate: FSEntry, destination: String) {
+
+        if  (entryToCreate is FSFolder) {
+            if (uuidMap.contains(entryToCreate.uuid)) {
+                throw CircularReferenceException("This will generate a circular reference.")
+            } else {
+                uuidMap[entryToCreate.uuid] = true
+            }
+        }
+
         val targetPath = File(destination, entryToCreate.name)
 
         if (!Files.isWritable(targetPath.parentFile.toPath().toAbsolutePath())) {
@@ -42,9 +54,6 @@ class FSCreator {
         }
 
         for (entry in entryToCreate.content) {
-            if (entryToCreate == entry) {
-                throw CircularReferenceException("This will generate a circular reference.")
-            }
             create(entry, targetPath.absolutePath)
         }
     }

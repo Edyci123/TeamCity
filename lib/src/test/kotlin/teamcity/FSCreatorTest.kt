@@ -144,8 +144,11 @@ class FSCreatorTest {
             files.add(FSFile("file$i", "This is file $i"))
         }
         val fsFolder = FSFolder("folder", files)
-        files.add(fsFolder)
-        val fsFolderRoot = FSFolder("folderRoot", files)
+        val filesInside = arrayListOf<FSEntry>(fsFolder)
+        val fsFolderInside = FSFolder("folderInside", filesInside)
+        files.add(fsFolderInside)
+
+        val fsFolderRoot = FSFolder("folderRoot", arrayListOf(fsFolder))
         assertThrows<CircularReferenceException> {
             fsCreator.create(fsFolderRoot, path)
         }
