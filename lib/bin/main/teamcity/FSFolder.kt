@@ -3,8 +3,11 @@ package teamcity
 import teamcity.exceptions.CircularReferenceException
 import teamcity.exceptions.EmptyNameException
 import teamcity.exceptions.SameNameException
+import java.util.UUID
 
 class FSFolder(name: String, val content: ArrayList<FSEntry>): FSEntry(name) {
+
+    private val _uuid: UUID = UUID.randomUUID()
 
     constructor(name: String) : this(name, ArrayList())
 
@@ -17,7 +20,7 @@ class FSFolder(name: String, val content: ArrayList<FSEntry>): FSEntry(name) {
         val namesFoldersMap: MutableMap<String, Boolean> = mutableMapOf();
 
         for (entry in content) {
-            if (this == entry) {
+            if (entry is FSFolder && this.uuid == entry.uuid) {
                 throw CircularReferenceException("A folder can't contain itself.")
             }
 
@@ -34,6 +37,12 @@ class FSFolder(name: String, val content: ArrayList<FSEntry>): FSEntry(name) {
             }
         }
     }
+
+    @get:Synchronized
+    val uuid: UUID
+        get() {
+            return _uuid;
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true;

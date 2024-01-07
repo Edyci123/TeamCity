@@ -2,10 +2,14 @@ package teamcity
 
 import org.junit.jupiter.api.assertThrows
 import teamcity.exceptions.CircularReferenceException
+import teamcity.exceptions.NoPermissionsException
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.FileAlreadyExistsException
+import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -41,7 +45,7 @@ class FSCreatorTest {
         for (i in 1..1000) {
             name += "f"
         }
-        val fsFile = FSFile(name)
+        val fsFile = FSFile(name, "")
         assertThrows<FileNotFoundException> {
             fsCreator.create(fsFile, path)
         }
@@ -49,7 +53,7 @@ class FSCreatorTest {
 
     @Test
     fun createNewFileNoContent() {
-        val fsFile = FSFile("File")
+        val fsFile = FSFile("File", "")
         fsCreator.create(fsFile, path)
         val file = File(Paths.get(path, fsFile.name).toString())
         assertTrue(file.exists())
@@ -64,7 +68,7 @@ class FSCreatorTest {
         val fsFile1 = FSFile("File1", "This is the file")
         assertThrows<FileAlreadyExistsException> {
             fsCreator.create(fsFile1, path)
-        }w
+        }
         assertTrue(File(Paths.get(path, fsFile.name).toString()).delete())
     }
 
@@ -80,7 +84,7 @@ class FSCreatorTest {
 
     @Test
     fun createEmptyFolder() {
-        val fsFolder = FSFolder("folderName", ArrayList())
+        val fsFolder = FSFolder("folderName")
         fsCreator.create(fsFolder, path)
         val folder = File(Paths.get(path, fsFolder.name).toString())
         assertTrue(folder.exists())
@@ -140,13 +144,32 @@ class FSCreatorTest {
             files.add(FSFile("file$i", "This is file $i"))
         }
         val fsFolder = FSFolder("folder", files)
-        files.add(fsFolder)
-        val fsFolderRoot = FSFolder("folderRoot", files)
+        val filesInside = arrayListOf<FSEntry>(fsFolder)
+        val fsFolderInside = FSFolder("folderInside", filesInside)
+        files.add(fsFolderInside)
+
+        val fsFolderRoot = FSFolder("folderRoot", arrayListOf(fsFolder))
         assertThrows<CircularReferenceException> {
             fsCreator.create(fsFolderRoot, path)
         }
         val folderRoot = File(Paths.get(path, fsFolderRoot.name).toString())
         assertTrue(folderRoot.deleteRecursively());
+    }
+
+    @Test
+    fun createEntryWithoutPermission() {
+        val os = System.getProperty("os.name").lowercase(Locale.getDefault())
+        if (!os.contains("win")) {
+            val fsFile = FSFile("File", "This is my file.")
+            val root = "/"
+            assertThrows<NoPermissionsException> {
+                fsCreator.create(fsFile, root)
+            }
+            val fsFolder = FSFolder("Folder")
+            assertThrows<NoPermissionsException> {
+                fsCreator.create(fsFolder, root)
+            }
+        }
     }
 
 }

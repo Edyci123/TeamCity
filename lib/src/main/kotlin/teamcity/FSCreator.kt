@@ -40,6 +40,7 @@ class FSCreator {
 
             is FSFolder -> {
                 createDirectoryTree(targetPath, entryToCreate)
+                uuidMap.remove(entryToCreate.uuid)
             }
             else -> {
                 throw UnsupportedFSEntryException("Unsupported FSEntry ${entryToCreate.javaClass.name}")
