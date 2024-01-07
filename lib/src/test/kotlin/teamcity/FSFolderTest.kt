@@ -4,6 +4,7 @@ import org.junit.jupiter.api.assertThrows
 import teamcity.exceptions.SameNameException
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class FSFolderTest { 
@@ -17,6 +18,7 @@ class FSFolderTest {
         val fsFolder = FSFolder("folder", files);
         assertEquals(files, fsFolder.content);
         assertEquals("folder", fsFolder.name);
+        assertNotNull(fsFolder.uuid)
     }
 
     @Test
@@ -25,6 +27,7 @@ class FSFolderTest {
         val fsFolder = FSFolder(name)
         assertEquals(fsFolder.name, name)
         assertTrue(fsFolder.content.isEmpty())
+        assertNotNull(fsFolder.uuid)
     }
 
     @Test
