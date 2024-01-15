@@ -18,10 +18,10 @@ class FSCreatorBuilderTest {
         val fsEntry = create {
             destination = path
             fsEntry = fsFolder {
-                name = "Folder1"
+                name("Folder1")
                 fsFile {
-                    name = "File1"
-                    content = "This is file1"
+                    name("File1")
+                    content("This is file1")
                 }
             }
         }

@@ -20,6 +20,10 @@ open class FSEntryBuilder() {
             fsEntry.name = value
         }
 
+    fun name(value: String) {
+        name = value
+    }
+
     protected fun checkName() {
         if (nameCalled == 0) {
             throw EmptyNameException("Every entry must have a name")

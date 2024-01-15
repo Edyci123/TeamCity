@@ -11,7 +11,7 @@ class FSEntryBuilderTest {
     @Test
     fun createEntry() {
         val entry = fsEntry {
-            name = "Name"
+            name("Name")
         }
         assertEquals(entry.name, "Name")
     }

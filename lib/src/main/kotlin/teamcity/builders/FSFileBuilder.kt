@@ -1,8 +1,6 @@
 package teamcity.builders
 
-import teamcity.FSEntry
 import teamcity.FSFile
-import teamcity.FSFolder
 
 class FSFileBuilder : FSEntryBuilder() {
     init {
@@ -24,6 +22,10 @@ class FSFileBuilder : FSEntryBuilder() {
         set(value) {
             fsFile.content = value
         }
+
+    fun content(value: String) {
+        content = value
+    }
 
     override fun build(): FSFile {
         checkName()
