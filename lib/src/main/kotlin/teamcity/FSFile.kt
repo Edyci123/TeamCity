@@ -2,7 +2,7 @@ package teamcity
 
 import teamcity.exceptions.EmptyNameException
 
-class FSFile(name: String, val content: String) : FSEntry(name) {
+class FSFile(name: String, var content: String) : FSEntryImpl() {
 
     constructor(name: String) : this(name, "")
 
