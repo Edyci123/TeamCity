@@ -1,7 +1,6 @@
 package teamcity
 
-abstract class FSEntry {
-    var name: String = ""
+abstract class FSEntry(var name: String = "") {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

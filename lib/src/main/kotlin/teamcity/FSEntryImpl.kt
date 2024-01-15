@@ -1,4 +1,4 @@
 package teamcity
 
-open class FSEntryImpl: FSEntry() {
+open class FSEntryImpl(name: String = ""): FSEntry(name) {
 }

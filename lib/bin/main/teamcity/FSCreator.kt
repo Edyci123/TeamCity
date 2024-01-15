@@ -31,7 +31,7 @@ class FSCreator {
         when (entryToCreate) {
             is FSFile -> {
                  if (!targetPath.exists()) {
-                     targetPath.parentFile.mkdirs()
+                     //targetPath.parentFile.mkdirs()
                      targetPath.writeText(entryToCreate.content)
                  } else {
                      throw FileAlreadyExistsException("File already exists ${targetPath.absolutePath}")
