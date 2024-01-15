@@ -5,7 +5,7 @@ import teamcity.FSFolder
 
 class FSFolderBuilder : FSEntryBuilder() {
     init {
-        fsEntry = FSFolder("1")
+        fsEntry = FSFolder("PlaceholderName")
     }
 
     private var fsFolder: FSFolder
@@ -23,6 +23,7 @@ class FSFolderBuilder : FSEntryBuilder() {
     }
 
     override fun build(): FSFolder {
+        checkName()
         return fsFolder
     }
 }
