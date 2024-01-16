@@ -4,7 +4,7 @@ import teamcity.FSEntry
 import teamcity.FSEntryImpl
 import teamcity.exceptions.EmptyNameException
 
-open class FSEntryBuilder() {
+open class FSEntryBuilder {
     protected var fsEntry = FSEntryImpl()
     private var isNameSet = false
 
