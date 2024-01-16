@@ -23,7 +23,7 @@ open class FSEntryBuilder {
     }
 
     protected fun checkName() {
-        if (isNameSet) throw EmptyNameException("Every entry must have a name")
+        if (!isNameSet) throw EmptyNameException("Every entry must have a name")
     }
 
     open fun build(): FSEntry {

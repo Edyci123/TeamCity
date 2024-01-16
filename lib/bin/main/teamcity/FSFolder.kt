@@ -5,11 +5,8 @@ import teamcity.exceptions.EmptyNameException
 import teamcity.exceptions.SameNameException
 import java.util.UUID
 
-class FSFolder(name: String, val content: ArrayList<FSEntry>): FSEntry(name) {
-
+class FSFolder(name: String = "", var content: ArrayList<FSEntry> = ArrayList()) : FSEntryImpl(name) {
     private val _uuid: UUID = UUID.randomUUID()
-
-    constructor(name: String) : this(name, ArrayList())
 
     init {
         if (name == "") {

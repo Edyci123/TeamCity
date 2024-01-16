@@ -6,7 +6,6 @@ import teamcity.exceptions.NoPermissionsException
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.FileAlreadyExistsException
-import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
 import kotlin.collections.ArrayList
@@ -154,6 +153,16 @@ class FSCreatorTest {
         }
         val folderRoot = File(Paths.get(path, fsFolderRoot.name).toString())
         assertTrue(folderRoot.deleteRecursively());
+    }
+
+    @Test
+    fun createMultipleInstancesOfSameDirectory() {
+        val folder1 = FSFolder("folder1", ArrayList())
+        val folder2 = FSFolder("folder2", arrayListOf(folder1))
+        val fsFolderRoot = FSFolder("folderRoot", arrayListOf(folder1, folder2))
+        fsCreator.create(fsFolderRoot, path)
+        val folderRoot = File(Paths.get(path, fsFolderRoot.name).toString())
+        assertTrue(folderRoot.deleteRecursively())
     }
 
     @Test
