@@ -6,18 +6,16 @@ import teamcity.exceptions.EmptyNameException
 
 open class FSEntryBuilder() {
     protected var fsEntry = FSEntryImpl()
-    private var nameCalled = 0
+    private var isNameSet = false
 
     var name: String
-        get() {
-            return fsEntry.name
-        }
+        get() = fsEntry.name
         set(value) {
-            nameCalled = 1
             if (value == "") {
                 throw EmptyNameException("Every entry must have a name")
             }
             fsEntry.name = value
+            isNameSet = true
         }
 
     fun name(value: String) {
@@ -25,9 +23,7 @@ open class FSEntryBuilder() {
     }
 
     protected fun checkName() {
-        if (nameCalled == 0) {
-            throw EmptyNameException("Every entry must have a name")
-        }
+        if (isNameSet) throw EmptyNameException("Every entry must have a name")
     }
 
     open fun build(): FSEntry {
