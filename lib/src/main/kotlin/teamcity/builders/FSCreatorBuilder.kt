@@ -15,7 +15,7 @@ class FSCreatorBuilder {
             }
             field = value
         }
-    var fsEntry: FSEntry? = null
+    var entry: FSEntry? = null
         set(value) {
             if (value == null) {
                 throw FSEntryEmptyException("No entry provided")
@@ -24,11 +24,11 @@ class FSCreatorBuilder {
         }
 
     fun build(): FSEntry {
-        if (fsEntry == null || destination == null) {
+        if (entry == null || destination == null) {
             throw Exception("Either the entry or the destination weren't specified!")
         }
-        fsCreator.create(fsEntry!!, destination!!)
-        return fsEntry!!
+        fsCreator.create(entry!!, destination!!)
+        return entry!!
     }
 }
 

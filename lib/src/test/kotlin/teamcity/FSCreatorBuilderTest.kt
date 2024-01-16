@@ -17,7 +17,7 @@ class FSCreatorBuilderTest {
     fun testCreateFolderWithFile() {
         val fsEntry = create {
             destination = path
-            fsEntry = fsFolder {
+            entry = fsFolder {
                 name("Folder1")
                 fsFile {
                     name("File1")
@@ -38,7 +38,7 @@ class FSCreatorBuilderTest {
     fun testCreateFile() {
         val fsEntry = create {
             destination = path
-            fsEntry = fsFile {
+            entry = fsFile {
                 name = "Name"
             }
         }
